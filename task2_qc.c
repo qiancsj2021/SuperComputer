@@ -27,7 +27,7 @@ int main(int argc, char *argv[]){
     
     int i, seed = my_id;
     int n_times = 0;
-    long long int n_points = 100000/num_procs; // Each process adds n_points random points at a time
+    long long int n_points = 1000; // Each process adds n_points random points at a time
     double sum_local = 0.0, sum = 0.0, integral = 0.0, current_gap = fabs(real_integral);
     while (current_gap > eps){
         n_times += 1;
@@ -47,13 +47,14 @@ int main(int argc, char *argv[]){
         
         integral = 4.0 * sum / (n_points * num_procs * n_times);
         current_gap = fabs(integral - real_integral);
+       // printf("Random points: %lld, the current gap %.8f \n", n_points * num_procs * n_times, current_gap);
         
     }
     end = MPI_Wtime();
 
     if(my_id == 0){
         printf("Finally, integral is approximated as %.8f \n", integral);
-        printf("Random points: %d, the current gap: %.8f, runtime: %.4f. \n\n", n_points * num_procs * n_times, current_gap, end - start);
+        printf("Random points: %lld, the current gap: %.8f, runtime: %.4f. \n\n", n_points * num_procs * n_times, current_gap, end - start);
     }
 
     MPI_Finalize();
